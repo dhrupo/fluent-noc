@@ -48,9 +48,9 @@ class ONOC_Frontend_Form {
 	 */
 	public static function render_form() {
 		// Check rate limiting
-		// if ( ! self::check_rate_limit() ) {
-		// 	return '<div class="onoc-error">Too many requests. Please try again later.</div>';
-		// }
+		if ( ! self::check_rate_limit() ) {
+			return '<div class="onoc-error">Too many requests. Please try again later.</div>';
+		}
 		
 		ob_start();
 		?>
@@ -142,9 +142,9 @@ class ONOC_Frontend_Form {
 		}
 		
 		// Check rate limiting
-		// if ( ! self::check_rate_limit() ) {
-		// 	wp_send_json_error( array( 'message' => 'Too many requests. Please try again later.' ) );
-		// }
+		if ( ! self::check_rate_limit() ) {
+			wp_send_json_error( array( 'message' => 'Too many requests. Please try again later.' ) );
+		}
 		
 		// Get today's date for validation
 		$today = date( 'Y-m-d' );
@@ -301,8 +301,8 @@ class ONOC_Frontend_Form {
 			return true;
 		}
 		
-		// Allow max 3 submissions per hour
-		return (int) $limit < 3;
+		// Allow max 10 submissions per hour
+		return (int) $limit < 10;
 	}
 	
 	/**
