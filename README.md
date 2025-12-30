@@ -23,10 +23,10 @@ A WordPress plugin for managing No Objection Certificate (NOC) requests with fro
    ```bash
    composer install
    ```
-4. (Optional) Build block assets:
+4. Build block assets:
    ```bash
    npm install
-   npm run build
+   npm run build or npm run start
    ```
 
 ## Requirements
@@ -68,10 +68,10 @@ Use the shortcode `[noc_application_form]` on any page or post to display the ap
 - **Joining Date** (required)
 - **Position** (required)
 - **Department** (required)
-- **Visiting Country** (required) - Dropdown with full country list
+- **Visiting Country** (required)
 - **Purpose of Visit** (required)
-- **Leave Start Date** (required) - Cannot be in the past
-- **Leave End Date** (required) - Cannot be in the past, must be after start date
+- **Leave Start Date** (required)
+- **Leave End Date** (required)
 
 ### Available Placeholders
 
@@ -102,7 +102,6 @@ Use the shortcode `[noc_application_form]` on any page or post to display the ap
 
 **Images (for image blocks):**
 - `{{qr_code}}` - QR code image for verification
-- `{{company_logo}}` - Company logo
 - `{{signature}}` - HR signature image
 
 ### Verification
@@ -118,7 +117,7 @@ Configure the following in **Office NOC > Settings**:
 - **Company Information**: Name, Address, Phone, Email
 - **HR Details**: HR Manager Name and Title
 - **HR Signature Image**: Upload signature image for PDF
-- **PDF Header Image**: Upload office letterhead/header image
+- **PDF Header Image**: Upload office header image
 - **PDF Footer Image**: Upload office footer image
 - **Email Settings**: From Name and From Address
 
