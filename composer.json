@@ -1,0 +1,23 @@
+{
+	"name": "office-noc-manager/office-noc-manager",
+	"description": "WordPress plugin for managing No Objection Certificate requests",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"require": {
+		"php": ">=7.4",
+		"dompdf/dompdf": "^2.0",
+		"endroid/qr-code": "^4.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"ONOC\\": "includes/"
+		}
+	},
+	"config": {
+		"optimize-autoloader": true,
+		"platform": {
+			"php": "7.4"
+		}
+	}
+}
+

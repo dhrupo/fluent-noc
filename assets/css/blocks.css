@@ -1,0 +1,12 @@
+/**
+ * Block editor styles
+ */
+
+.onoc-blocks-editor {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+.onoc-blocks-editor .block-editor-block-list__layout {
+	padding: 20px;
+}
+

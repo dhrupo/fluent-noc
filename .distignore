@@ -1,0 +1,50 @@
+# Development dependencies
+/node_modules/
+/package-lock.json
+/vendor/
+/composer.lock
+
+# Build files
+/assets/js/build/
+*.map
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation (optional - remove if you want to include README in distribution)
+README.md
+CHANGELOG.md
+LICENSE.txt
+
+# Development files
+.env
+.env.local
+phpunit.xml
+phpunit.xml.dist
+tests/
+/tests/
+
+# Source maps
+*.map
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
