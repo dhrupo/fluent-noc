@@ -76,7 +76,8 @@ class ONOC_Frontend_Form {
 				<div class="onoc-form-row">
 					<div class="onoc-form-group">
 						<label for="onoc-joining-date"><?php esc_html_e( 'Joining Date', 'office-noc-manager' ); ?> <span class="required">*</span></label>
-						<input type="date" id="onoc-joining-date" name="joining_date" required>
+						<input type="date" id="onoc-joining-date" name="joining_date" max="<?php echo esc_attr( date( 'Y-m-d' ) ); ?>" required>
+						<span class="onoc-field-error" id="onoc-joining-date-error" style="display: none; color: #d63638; font-size: 12px; margin-top: 5px;"></span>
 					</div>
 					
 					<div class="onoc-form-group">
@@ -145,71 +146,121 @@ class ONOC_Frontend_Form {
 		// 	wp_send_json_error( array( 'message' => 'Too many requests. Please try again later.' ) );
 		// }
 		
+		// Get today's date for validation
+		$today = date( 'Y-m-d' );
+		
 		// Validate and sanitize input
 		$data = array(
-			'full_name'       => isset( $_POST['full_name'] ) ? sanitize_text_field( $_POST['full_name'] ) : '',
-			'employee_id'     => isset( $_POST['employee_id'] ) ? sanitize_text_field( $_POST['employee_id'] ) : '',
-			'email'           => isset( $_POST['email'] ) ? sanitize_email( $_POST['email'] ) : '',
-			'joining_date'    => isset( $_POST['joining_date'] ) ? sanitize_text_field( $_POST['joining_date'] ) : '',
-			'position'        => isset( $_POST['position'] ) ? sanitize_text_field( $_POST['position'] ) : '',
-			'department'      => isset( $_POST['department'] ) ? sanitize_text_field( $_POST['department'] ) : '',
-			'visiting_country' => isset( $_POST['visiting_country'] ) ? sanitize_text_field( $_POST['visiting_country'] ) : '',
-			'purpose'         => isset( $_POST['purpose'] ) ? sanitize_textarea_field( $_POST['purpose'] ) : '',
-			'leave_start'     => isset( $_POST['leave_start'] ) ? sanitize_text_field( $_POST['leave_start'] ) : '',
-			'leave_end'       => isset( $_POST['leave_end'] ) ? sanitize_text_field( $_POST['leave_end'] ) : '',
+			'full_name'       => isset( $_POST['full_name'] ) ? trim( sanitize_text_field( $_POST['full_name'] ) ) : '',
+			'employee_id'     => isset( $_POST['employee_id'] ) ? trim( sanitize_text_field( $_POST['employee_id'] ) ) : '',
+			'email'           => isset( $_POST['email'] ) ? trim( sanitize_email( $_POST['email'] ) ) : '',
+			'joining_date'    => isset( $_POST['joining_date'] ) ? trim( sanitize_text_field( $_POST['joining_date'] ) ) : '',
+			'position'        => isset( $_POST['position'] ) ? trim( sanitize_text_field( $_POST['position'] ) ) : '',
+			'department'      => isset( $_POST['department'] ) ? trim( sanitize_text_field( $_POST['department'] ) ) : '',
+			'visiting_country' => isset( $_POST['visiting_country'] ) ? trim( sanitize_text_field( $_POST['visiting_country'] ) ) : '',
+			'purpose'         => isset( $_POST['purpose'] ) ? trim( sanitize_textarea_field( $_POST['purpose'] ) ) : '',
+			'leave_start'     => isset( $_POST['leave_start'] ) ? trim( sanitize_text_field( $_POST['leave_start'] ) ) : '',
+			'leave_end'       => isset( $_POST['leave_end'] ) ? trim( sanitize_text_field( $_POST['leave_end'] ) ) : '',
 		);
 		
 		// Validate required fields
 		$errors = array();
+		
+		// Full Name validation
 		if ( empty( $data['full_name'] ) ) {
-			$errors[] = 'Full name is required.';
+			$errors[] = __( 'Full name is required.', 'office-noc-manager' );
+		} elseif ( strlen( $data['full_name'] ) < 2 ) {
+			$errors[] = __( 'Full name must be at least 2 characters long.', 'office-noc-manager' );
 		}
+		
+		// Employee ID validation
 		if ( empty( $data['employee_id'] ) ) {
-			$errors[] = 'Employee ID is required.';
+			$errors[] = __( 'Employee ID is required.', 'office-noc-manager' );
+		} elseif ( strlen( $data['employee_id'] ) < 1 ) {
+			$errors[] = __( 'Employee ID cannot be empty.', 'office-noc-manager' );
 		}
-		if ( empty( $data['email'] ) || ! is_email( $data['email'] ) ) {
-			$errors[] = 'Valid email is required.';
+		
+		// Email validation
+		if ( empty( $data['email'] ) ) {
+			$errors[] = __( 'Email is required.', 'office-noc-manager' );
+		} elseif ( ! is_email( $data['email'] ) ) {
+			$errors[] = __( 'Please enter a valid email address.', 'office-noc-manager' );
 		}
+		
+		// Joining Date validation
 		if ( empty( $data['joining_date'] ) ) {
-			$errors[] = 'Joining date is required.';
+			$errors[] = __( 'Joining date is required.', 'office-noc-manager' );
+		} else {
+			// Validate date format (YYYY-MM-DD)
+			if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $data['joining_date'] ) ) {
+				$errors[] = __( 'Invalid joining date format.', 'office-noc-manager' );
+			} elseif ( strtotime( $data['joining_date'] ) === false ) {
+				$errors[] = __( 'Invalid joining date.', 'office-noc-manager' );
+			} elseif ( strtotime( $data['joining_date'] ) > strtotime( $today ) ) {
+				$errors[] = __( 'Joining date cannot be in the future.', 'office-noc-manager' );
+			}
 		}
+		
+		// Position validation
 		if ( empty( $data['position'] ) ) {
-			$errors[] = 'Position is required.';
+			$errors[] = __( 'Position is required.', 'office-noc-manager' );
+		} elseif ( strlen( $data['position'] ) < 2 ) {
+			$errors[] = __( 'Position must be at least 2 characters long.', 'office-noc-manager' );
 		}
+		
+		// Department validation
 		if ( empty( $data['department'] ) ) {
-			$errors[] = 'Department is required.';
+			$errors[] = __( 'Department is required.', 'office-noc-manager' );
+		} elseif ( strlen( $data['department'] ) < 2 ) {
+			$errors[] = __( 'Department must be at least 2 characters long.', 'office-noc-manager' );
 		}
+		
+		// Visiting Country validation
 		if ( empty( $data['visiting_country'] ) ) {
-			$errors[] = 'Visiting country is required.';
+			$errors[] = __( 'Visiting country is required.', 'office-noc-manager' );
 		}
+		
+		// Purpose validation
 		if ( empty( $data['purpose'] ) ) {
-			$errors[] = 'Purpose of visit is required.';
+			$errors[] = __( 'Purpose of visit is required.', 'office-noc-manager' );
+		} elseif ( strlen( $data['purpose'] ) < 10 ) {
+			$errors[] = __( 'Purpose of visit must be at least 10 characters long.', 'office-noc-manager' );
 		}
+		
+		// Leave Start Date validation
 		if ( empty( $data['leave_start'] ) ) {
-			$errors[] = 'Leave start date is required.';
+			$errors[] = __( 'Leave start date is required.', 'office-noc-manager' );
+		} else {
+			// Validate date format (YYYY-MM-DD)
+			if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $data['leave_start'] ) ) {
+				$errors[] = __( 'Invalid leave start date format.', 'office-noc-manager' );
+			} elseif ( strtotime( $data['leave_start'] ) === false ) {
+				$errors[] = __( 'Invalid leave start date.', 'office-noc-manager' );
+			} elseif ( strtotime( $data['leave_start'] ) < strtotime( $today ) ) {
+				$errors[] = __( 'Leave start date cannot be in the past.', 'office-noc-manager' );
+			}
 		}
+		
+		// Leave End Date validation
 		if ( empty( $data['leave_end'] ) ) {
-			$errors[] = 'Leave end date is required.';
-		}
-		
-		// Validate dates
-		$today = date( 'Y-m-d' );
-		
-		if ( ! empty( $data['leave_start'] ) ) {
-			if ( strtotime( $data['leave_start'] ) < strtotime( $today ) ) {
-				$errors[] = 'Leave start date cannot be in the past.';
+			$errors[] = __( 'Leave end date is required.', 'office-noc-manager' );
+		} else {
+			// Validate date format (YYYY-MM-DD)
+			if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $data['leave_end'] ) ) {
+				$errors[] = __( 'Invalid leave end date format.', 'office-noc-manager' );
+			} elseif ( strtotime( $data['leave_end'] ) === false ) {
+				$errors[] = __( 'Invalid leave end date.', 'office-noc-manager' );
+			} elseif ( strtotime( $data['leave_end'] ) < strtotime( $today ) ) {
+				$errors[] = __( 'Leave end date cannot be in the past.', 'office-noc-manager' );
 			}
 		}
 		
-		if ( ! empty( $data['leave_end'] ) ) {
-			if ( strtotime( $data['leave_end'] ) < strtotime( $today ) ) {
-				$errors[] = 'Leave end date cannot be in the past.';
-			}
-		}
-		
+		// Validate date relationships
 		if ( ! empty( $data['leave_start'] ) && ! empty( $data['leave_end'] ) ) {
-			if ( strtotime( $data['leave_start'] ) > strtotime( $data['leave_end'] ) ) {
-				$errors[] = 'Leave end date must be after start date.';
+			if ( strtotime( $data['leave_start'] ) !== false && strtotime( $data['leave_end'] ) !== false ) {
+				if ( strtotime( $data['leave_start'] ) > strtotime( $data['leave_end'] ) ) {
+					$errors[] = __( 'Leave end date must be after start date.', 'office-noc-manager' );
+				}
 			}
 		}
 		
@@ -230,7 +281,7 @@ class ONOC_Frontend_Form {
 		
 		// Send confirmation email
 		$email = new ONOC_Email();
-		$email->send_submission_confirmation( $data['email'], $result['reference_id'] );
+		$email->send_submission_confirmation( $data['email'], $result['reference_id'], $data['full_name'] );
 		
 		wp_send_json_success( array(
 			'message'      => 'Your NOC request has been submitted successfully. Reference ID: ' . $result['reference_id'],

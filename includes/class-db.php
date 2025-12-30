@@ -338,11 +338,18 @@ class ONOC_DB {
 	/**
 	 * Approve request
 	 */
-	public function approve_request( $id, $pdf_url ) {
-		return $this->update_request( $id, array(
+	public function approve_request( $id, $pdf_url, $hr_note = '' ) {
+		$update_data = array(
 			'status'  => 'approved',
 			'pdf_url' => $pdf_url,
-		) );
+		);
+		
+		// HR note is required
+		if ( ! empty( $hr_note ) ) {
+			$update_data['hr_note'] = $hr_note;
+		}
+		
+		return $this->update_request( $id, $update_data );
 	}
 	
 	/**

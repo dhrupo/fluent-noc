@@ -380,6 +380,18 @@ class ONOC_Gutenberg_Admin {
 						<th><?php esc_html_e( 'Leave End Date', 'office-noc-manager' ); ?></th>
 						<td><?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $request['leave_end'] ) ) ); ?></td>
 					</tr>
+					<?php if ( ! empty( $request['leave_start'] ) && ! empty( $request['leave_end'] ) ) : ?>
+						<?php
+						$start_date = new DateTime( $request['leave_start'] );
+						$end_date = new DateTime( $request['leave_end'] );
+						$interval = $start_date->diff( $end_date );
+						$total_days = $interval->days + 1; // Include both start and end days
+						?>
+						<tr>
+							<th><?php esc_html_e( 'Total Leave Days', 'office-noc-manager' ); ?></th>
+							<td><strong><?php echo esc_html( $total_days ); ?></strong> <?php echo esc_html( _n( 'day', 'days', $total_days, 'office-noc-manager' ) ); ?></td>
+						</tr>
+					<?php endif; ?>
 					<tr>
 						<th><?php esc_html_e( 'Status', 'office-noc-manager' ); ?></th>
 						<td>
@@ -396,8 +408,9 @@ class ONOC_Gutenberg_Admin {
 				
 				<?php if ( $request['status'] === 'pending' ) : ?>
 					<div class="onoc-review-actions">
-						<h3><?php esc_html_e( 'HR Note / Rejection Reason', 'office-noc-manager' ); ?></h3>
-						<textarea id="onoc-hr-note" rows="4" style="width: 100%;"></textarea>
+						<h3><?php esc_html_e( 'HR Note', 'office-noc-manager' ); ?> <span class="required" style="color: #d63638;">*</span></h3>
+						<p class="description"><?php esc_html_e( 'Please provide a note that will be saved with the approval or rejection.', 'office-noc-manager' ); ?></p>
+						<textarea id="onoc-hr-note" name="onoc-hr-note" rows="4" style="width: 100%;" required placeholder="<?php esc_attr_e( 'Enter approval note or rejection reason...', 'office-noc-manager' ); ?>"></textarea>
 						
 						<div class="onoc-action-buttons">
 							<button type="button" class="button button-primary onoc-approve-btn" data-request-id="<?php echo esc_attr( $request_id ); ?>">
@@ -408,9 +421,15 @@ class ONOC_Gutenberg_Admin {
 							</button>
 						</div>
 					</div>
-				<?php elseif ( $request['status'] === 'approved' && ! empty( $request['pdf_url'] ) ) : ?>
+				<?php elseif ( $request['status'] === 'approved' ) : ?>
 					<div class="onoc-approved-info">
-						<p><a href="<?php echo esc_url( $request['pdf_url'] ); ?>" class="button" target="_blank"><?php esc_html_e( 'View PDF', 'office-noc-manager' ); ?></a></p>
+						<?php if ( ! empty( $request['hr_note'] ) ) : ?>
+							<p><strong><?php esc_html_e( 'Approval Note:', 'office-noc-manager' ); ?></strong></p>
+							<p><?php echo esc_html( $request['hr_note'] ); ?></p>
+						<?php endif; ?>
+						<?php if ( ! empty( $request['pdf_url'] ) ) : ?>
+							<p><a href="<?php echo esc_url( $request['pdf_url'] ); ?>" class="button" target="_blank"><?php esc_html_e( 'View PDF', 'office-noc-manager' ); ?></a></p>
+						<?php endif; ?>
 					</div>
 				<?php elseif ( $request['status'] === 'rejected' && ! empty( $request['hr_note'] ) ) : ?>
 					<div class="onoc-rejected-info">
@@ -559,13 +578,12 @@ class ONOC_Gutenberg_Admin {
 						<th><label for="signature_image_file"><?php esc_html_e( 'HR Signature Image', 'office-noc-manager' ); ?></label></th>
 						<td>
 							<input type="file" id="signature_image_file" name="signature_image_file" accept="image/*" />
-							<?php if ( get_option( 'onoc_signature_image' ) ) : ?>
-								<p id="onoc-signature-image-container">
-									<img src="<?php echo esc_url( get_option( 'onoc_signature_image' ) ); ?>" style="max-width: 200px; max-height: 100px;" />
-									<br/>
-									<button type="button" class="button button-secondary onoc-remove-image-btn" data-image-type="signature" style="margin-top: 10px;"><?php esc_html_e( 'Remove Image', 'office-noc-manager' ); ?></button>
-								</p>
-							<?php endif; ?>
+							<p id="onoc-signature-image-container" style="margin-top: 10px;">
+								<?php if ( get_option( 'onoc_signature_image' ) ) : ?>
+									<img src="<?php echo esc_url( get_option( 'onoc_signature_image' ) ); ?>" style="max-width: 200px; max-height: 100px; display: block; margin-bottom: 10px;" />
+									<button type="button" class="button button-secondary onoc-remove-image-btn" data-image-type="signature"><?php esc_html_e( 'Remove Image', 'office-noc-manager' ); ?></button>
+								<?php endif; ?>
+							</p>
 							<p class="description"><?php esc_html_e( 'Upload signature image file', 'office-noc-manager' ); ?></p>
 							<p class="description"><?php esc_html_e( 'Or enter URL:', 'office-noc-manager' ); ?></p>
 							<input type="url" id="signature_image" name="signature_image" value="<?php echo esc_url( get_option( 'onoc_signature_image', '' ) ); ?>" class="regular-text" placeholder="<?php esc_attr_e( 'Or paste image URL here', 'office-noc-manager' ); ?>" />
@@ -575,13 +593,12 @@ class ONOC_Gutenberg_Admin {
 						<th><label for="pdf_header_file"><?php esc_html_e( 'PDF Header Image', 'office-noc-manager' ); ?></label></th>
 						<td>
 							<input type="file" id="pdf_header_file" name="pdf_header_file" accept="image/*" />
-							<?php if ( get_option( 'onoc_pdf_header' ) ) : ?>
-								<p id="onoc-header-image-container">
-									<img src="<?php echo esc_url( get_option( 'onoc_pdf_header' ) ); ?>" style="max-width: 100%; max-height: 150px;" />
-									<br/>
-									<button type="button" class="button button-secondary onoc-remove-image-btn" data-image-type="header" style="margin-top: 10px;"><?php esc_html_e( 'Remove Image', 'office-noc-manager' ); ?></button>
-								</p>
-							<?php endif; ?>
+							<p id="onoc-header-image-container" style="margin-top: 10px;">
+								<?php if ( get_option( 'onoc_pdf_header' ) ) : ?>
+									<img src="<?php echo esc_url( get_option( 'onoc_pdf_header' ) ); ?>" style="max-width: 100%; max-height: 150px; display: block; margin-bottom: 10px;" />
+									<button type="button" class="button button-secondary onoc-remove-image-btn" data-image-type="header"><?php esc_html_e( 'Remove Image', 'office-noc-manager' ); ?></button>
+								<?php endif; ?>
+							</p>
 							<p class="description"><?php esc_html_e( 'Upload office letterhead/header image for PDF', 'office-noc-manager' ); ?></p>
 							<p class="description"><?php esc_html_e( 'Or enter URL:', 'office-noc-manager' ); ?></p>
 							<input type="url" id="pdf_header" name="pdf_header" value="<?php echo esc_url( get_option( 'onoc_pdf_header', '' ) ); ?>" class="regular-text" placeholder="<?php esc_attr_e( 'Or paste image URL here', 'office-noc-manager' ); ?>" />
@@ -591,13 +608,12 @@ class ONOC_Gutenberg_Admin {
 						<th><label for="pdf_footer_file"><?php esc_html_e( 'PDF Footer Image', 'office-noc-manager' ); ?></label></th>
 						<td>
 							<input type="file" id="pdf_footer_file" name="pdf_footer_file" accept="image/*" />
-							<?php if ( get_option( 'onoc_pdf_footer' ) ) : ?>
-								<p id="onoc-footer-image-container">
-									<img src="<?php echo esc_url( get_option( 'onoc_pdf_footer' ) ); ?>" style="max-width: 100%; max-height: 100px;" />
-									<br/>
-									<button type="button" class="button button-secondary onoc-remove-image-btn" data-image-type="footer" style="margin-top: 10px;"><?php esc_html_e( 'Remove Image', 'office-noc-manager' ); ?></button>
-								</p>
-							<?php endif; ?>
+							<p id="onoc-footer-image-container" style="margin-top: 10px;">
+								<?php if ( get_option( 'onoc_pdf_footer' ) ) : ?>
+									<img src="<?php echo esc_url( get_option( 'onoc_pdf_footer' ) ); ?>" style="max-width: 100%; max-height: 100px; display: block; margin-bottom: 10px;" />
+									<button type="button" class="button button-secondary onoc-remove-image-btn" data-image-type="footer"><?php esc_html_e( 'Remove Image', 'office-noc-manager' ); ?></button>
+								<?php endif; ?>
+							</p>
 							<p class="description"><?php esc_html_e( 'Upload office footer image for PDF', 'office-noc-manager' ); ?></p>
 							<p class="description"><?php esc_html_e( 'Or enter URL:', 'office-noc-manager' ); ?></p>
 							<input type="url" id="pdf_footer" name="pdf_footer" value="<?php echo esc_url( get_option( 'onoc_pdf_footer', '' ) ); ?>" class="regular-text" placeholder="<?php esc_attr_e( 'Or paste image URL here', 'office-noc-manager' ); ?>" />
@@ -865,9 +881,15 @@ class ONOC_Gutenberg_Admin {
 		}
 		
 		$request_id = isset( $_POST['request_id'] ) ? (int) $_POST['request_id'] : 0;
+		$hr_note = isset( $_POST['hr_note'] ) ? trim( sanitize_textarea_field( $_POST['hr_note'] ) ) : '';
 		
 		if ( ! $request_id ) {
 			wp_send_json_error( array( 'message' => 'Invalid request ID.' ) );
+		}
+		
+		// Validate HR note is required
+		if ( empty( $hr_note ) ) {
+			wp_send_json_error( array( 'message' => __( 'HR note is required for approval.', 'office-noc-manager' ) ) );
 		}
 		
 		// Generate PDF
@@ -879,7 +901,7 @@ class ONOC_Gutenberg_Admin {
 		
 		// Update request
 		$db = new ONOC_DB();
-		$success = $db->approve_request( $request_id, $pdf_url );
+		$success = $db->approve_request( $request_id, $pdf_url, $hr_note );
 		
 		if ( ! $success ) {
 			wp_send_json_error( array( 'message' => 'Failed to update request.' ) );
@@ -910,10 +932,15 @@ class ONOC_Gutenberg_Admin {
 		}
 		
 		$request_id = isset( $_POST['request_id'] ) ? (int) $_POST['request_id'] : 0;
-		$hr_note = isset( $_POST['hr_note'] ) ? sanitize_textarea_field( $_POST['hr_note'] ) : '';
+		$hr_note = isset( $_POST['hr_note'] ) ? trim( sanitize_textarea_field( $_POST['hr_note'] ) ) : '';
 		
 		if ( ! $request_id ) {
 			wp_send_json_error( array( 'message' => 'Invalid request ID.' ) );
+		}
+		
+		// Validate HR note is required
+		if ( empty( $hr_note ) ) {
+			wp_send_json_error( array( 'message' => __( 'HR note (rejection reason) is required.', 'office-noc-manager' ) ) );
 		}
 		
 		// Update request

@@ -51,6 +51,24 @@ A WordPress plugin for managing No Objection Certificate (NOC) requests with fro
 
 7. Activate the plugin through the 'Plugins' menu in WordPress
 
+## Test Site
+
+A live demo of the plugin is available for testing:
+
+1. **Login to WordPress Admin:**
+   - [Admin Login](https://surpriseroll.s6-tastewp.com/wp-admin/?wtlwp_token=dd05904a7ac53e6818ac449e76533cd4709344d129a3eebf1ad628d01da35e9cd48534a564763bb07a725379b08bf5e2de290643e48abe27baa4c94ba12af38c)
+
+2. **Submit a NOC Request:**
+   - Visit the [NOC Request Form](https://surpriseroll.s6-tastewp.com/noc-request-form/)
+   - Fill out the form with test data
+   - Submit the request
+
+3. **Review and Manage Requests:**
+   - After logging in, go to [Office NOC Admin Panel](https://surpriseroll.s6-tastewp.com/wp-admin/admin.php?page=office-noc)
+   - View all submitted requests
+   - Approve or reject requests
+   - Generate PDF certificates for approved requests
+
 ## Requirements
 
 - WordPress 6.4 or higher
@@ -142,6 +160,50 @@ Configure the following in **Office NOC > Settings**:
 - **PDF Header Image**: Upload office header image
 - **PDF Footer Image**: Upload office footer image
 - **Email Settings**: From Name and From Address
+
+## Email Configuration
+
+This plugin sends automated emails for:
+- Submission confirmation
+- Approval notification (with PDF attachment)
+- Rejection notification (with rejection reason)
+
+**Important:** For reliable email delivery, it's must be needed to use an SMTP plugin.
+
+### Recommended: FluentSMTP Plugin
+
+We recommend using [FluentSMTP](https://wordpress.org/plugins/fluent-smtp/) - a free, powerful WordPress SMTP plugin that ensures your emails are delivered reliably.
+
+#### Setup FluentSMTP:
+
+1. **Install FluentSMTP:**
+   - Go to **Plugins > Add New** in WordPress admin
+   - Search for "FluentSMTP"
+   - Click **Install Now** and then **Activate**
+
+2. **Configure Email Service:**
+   - Navigate to **FluentSMTP** in the WordPress admin menu
+   - Choose your email service provider:
+     - **Gmail/Google Workspace** (OAuth - recommended for Gmail users)
+     - **Amazon SES** (for high-volume sending)
+     - **SendGrid** (popular transactional email service)
+     - **Mailgun** (enterprise-grade email service)
+     - **Any SMTP provider** (generic SMTP configuration)
+   - Follow the setup wizard to connect your email service
+
+3. **Test Email Delivery:**
+   - Use FluentSMTP's built-in test email feature
+   - Verify that emails are being sent successfully
+
+#### Alternative SMTP Plugins:
+
+If you prefer a different SMTP plugin, any of these will work:
+- **WP Mail SMTP** by WPForms
+- **Easy WP SMTP**
+- **Post SMTP**
+- Any other WordPress SMTP plugin
+
+**Note:** After configuring your SMTP plugin, test the email functionality by submitting a test NOC request to ensure all emails (submission, approval, rejection) are being sent correctly.
 
 ## Dependencies
 

@@ -8,12 +8,36 @@
 	$(document).ready(function() {
 		var $startDate = $('#onoc-leave-start');
 		var $endDate = $('#onoc-leave-end');
+		var $joiningDate = $('#onoc-joining-date');
+		var $email = $('#onoc-email');
+		
+		// Email validation regex
+		var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		
 		// Get today's date in YYYY-MM-DD format
 		var today = new Date();
 		var todayStr = today.getFullYear() + '-' + 
 			String(today.getMonth() + 1).padStart(2, '0') + '-' + 
 			String(today.getDate()).padStart(2, '0');
+		
+		// Set maximum date to today for joining date (cannot be future)
+		if ($joiningDate.length) {
+			$joiningDate.attr('max', todayStr);
+			
+			// Validate joining date on change
+			$joiningDate.on('change', function() {
+				var joiningDateVal = $(this).val();
+				var $error = $('#onoc-joining-date-error');
+				
+				if (joiningDateVal && joiningDateVal > todayStr) {
+					$error.text('Joining date cannot be in the future.').show();
+					$(this).addClass('error');
+				} else {
+					$error.hide();
+					$(this).removeClass('error');
+				}
+			});
+		}
 		
 		// Set minimum date to today for start date
 		$startDate.attr('min', todayStr);
@@ -49,6 +73,7 @@
 			}
 		});
 		
+		
 		$('#onoc-application-form').on('submit', function(e) {
 			e.preventDefault();
 			
@@ -59,6 +84,14 @@
 			// Validate dates before submission
 			var startDateVal = $startDate.val();
 			var endDateVal = $endDate.val();
+			var joiningDateVal = $joiningDate.length ? $joiningDate.val() : '';
+			
+			// Validate joining date
+			if (joiningDateVal && joiningDateVal > todayStr) {
+				$messages.addClass('error').html('<p>Joining date cannot be in the future.</p>');
+				$joiningDate.focus();
+				return;
+			}
 			
 			if (startDateVal && startDateVal < todayStr) {
 				$messages.addClass('error').html('<p>Leave Start Date cannot be in the past.</p>');
@@ -72,6 +105,14 @@
 			
 			if (startDateVal && endDateVal && endDateVal < startDateVal) {
 				$messages.addClass('error').html('<p>Leave End Date must be after Leave Start Date.</p>');
+				return;
+			}
+			
+			// Validate email format
+			var emailVal = $email.val().trim();
+			if (emailVal && !emailRegex.test(emailVal)) {
+				$messages.addClass('error').html('<p>Please enter a valid email address.</p>');
+				$email.focus();
 				return;
 			}
 			

@@ -12,6 +12,13 @@
 			
 			var $btn = $(this);
 			var requestId = $btn.data('request-id');
+			var hrNote = $('#onoc-hr-note').val() || '';
+			
+			if (!hrNote || !hrNote.trim()) {
+				alert('Please provide an HR note before approving this request.');
+				$('#onoc-hr-note').focus();
+				return;
+			}
 			
 			if (!confirm('Are you sure you want to approve this request?')) {
 				return;
@@ -25,6 +32,7 @@
 				data: {
 					action: 'onoc_approve_request',
 					request_id: requestId,
+					hr_note: hrNote,
 					nonce: onocAdmin.nonce
 				},
 				success: function(response) {
@@ -182,6 +190,86 @@
 					$btn.prop('disabled', false).text('Remove Image');
 				}
 			});
+		});
+		
+		// Image preview functionality
+		// Function to show image preview
+		function showImagePreview(input, containerId, maxWidth, maxHeight) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+				var $input = $(input);
+				
+				reader.onload = function(e) {
+					var container = $('#' + containerId);
+					var existingImg = container.find('img');
+					var existingBtn = container.find('.onoc-remove-image-btn, .onoc-remove-preview-btn');
+					
+					// Remove existing image and button if any
+					existingImg.remove();
+					existingBtn.remove();
+					
+					// Create new image preview
+					var img = $('<img>').attr('src', e.target.result)
+						.css({
+							'max-width': maxWidth,
+							'max-height': maxHeight,
+							'display': 'block',
+							'margin-bottom': '10px'
+						});
+					
+					// Create remove button for preview with data attribute to identify the input
+					var inputId = $input.attr('id');
+					var removeBtn = $('<button>')
+						.attr('type', 'button')
+						.addClass('button button-secondary onoc-remove-preview-btn')
+						.attr('data-input-id', inputId)
+						.attr('data-container-id', containerId)
+						.text('Remove Preview')
+						.css('margin-top', '10px');
+					
+					container.append(img).append(removeBtn);
+					container.show();
+				};
+				
+				reader.readAsDataURL(input.files[0]);
+			}
+		}
+		
+		// Handle remove preview button click
+		$(document).on('click', '.onoc-remove-preview-btn', function(e) {
+			e.preventDefault();
+			
+			var $btn = $(this);
+			var inputId = $btn.data('input-id');
+			var containerId = $btn.data('container-id');
+			var $input = $('#' + inputId);
+			var $container = $('#' + containerId);
+			
+			// Clear the file input
+			$input.val('');
+			
+			// Clear the container
+			$container.empty();
+			
+			// Hide the container if it's empty
+			if ($container.children().length === 0) {
+				$container.hide();
+			}
+		});
+		
+		// Handle signature image preview
+		$(document).on('change', '#signature_image_file', function() {
+			showImagePreview(this, 'onoc-signature-image-container', '200px', '100px');
+		});
+		
+		// Handle header image preview
+		$(document).on('change', '#pdf_header_file', function() {
+			showImagePreview(this, 'onoc-header-image-container', '100%', '150px');
+		});
+		
+		// Handle footer image preview
+		$(document).on('change', '#pdf_footer_file', function() {
+			showImagePreview(this, 'onoc-footer-image-container', '100%', '100px');
 		});
 	});
 })(jQuery);
