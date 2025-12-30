@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: Fluent NOC Manager
- * Plugin URI: https://github.com/fluent-noc
+ * Plugin URI: https://github.com/dhrupo/fluent-noc
  * Description: Manage No Objection Certificate (NOC) requests with frontend application form, admin review panel, PDF generation, and email notifications.
- * Version: 1.0.0git 
+ * Version: 1.0.0
  * Author: Dhrupo
  * Author URI: https://niluthpalpurkayastha.netlify.app
  * License: GPL v2 or later
