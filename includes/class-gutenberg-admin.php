@@ -71,7 +71,16 @@ class ONOC_Gutenberg_Admin {
 		// Enqueue Gutenberg editor
 		wp_enqueue_script( 'wp-blocks' );
 		wp_enqueue_script( 'wp-element' );
-		wp_enqueue_script( 'wp-editor' );
+		// wp-editor is deprecated, use wp-block-editor for WordPress 5.8+
+		if ( function_exists( 'wp_enqueue_script' ) ) {
+			// Check WordPress version for compatibility
+			global $wp_version;
+			if ( version_compare( $wp_version, '5.8', '>=' ) ) {
+				wp_enqueue_script( 'wp-block-editor' );
+			} else {
+				wp_enqueue_script( 'wp-editor' );
+			}
+		}
 		wp_enqueue_script( 'wp-components' );
 		wp_enqueue_script( 'wp-data' );
 		wp_enqueue_script( 'wp-api-fetch' );
@@ -81,10 +90,19 @@ class ONOC_Gutenberg_Admin {
 		
 		// Enqueue our block scripts if they exist
 		if ( file_exists( ONOC_PLUGIN_DIR . 'assets/js/build/index.js' ) ) {
+			// Build dependencies array based on WordPress version
+			global $wp_version;
+			$dependencies = array( 'wp-blocks', 'wp-element', 'wp-components', 'wp-data', 'wp-api-fetch' );
+			if ( version_compare( $wp_version, '5.8', '>=' ) ) {
+				$dependencies[] = 'wp-block-editor';
+			} else {
+				$dependencies[] = 'wp-editor';
+			}
+			
 			wp_enqueue_script(
 				'onoc-blocks',
 				ONOC_PLUGIN_URL . 'assets/js/build/index.js',
-				array( 'wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-data', 'wp-api-fetch' ),
+				$dependencies,
 				ONOC_VERSION,
 				true
 			);

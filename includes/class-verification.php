@@ -39,13 +39,13 @@ class ONOC_Verification {
 	 */
 	public function handle_verification() {
 		// Check both query var and direct URL parameter
-		$is_verification_page = get_query_var( 'onoc_verification' ) || ( isset( $_SERVER['REQUEST_URI'] ) && strpos( $_SERVER['REQUEST_URI'], '/noc-verification' ) !== false );
+		$is_verification_page = get_query_var( 'onoc_verification' ) || ( isset( $_SERVER['REQUEST_URI'] ) && is_string( $_SERVER['REQUEST_URI'] ) && strpos( $_SERVER['REQUEST_URI'], '/noc-verification' ) !== false );
 		
 		if ( ! $is_verification_page ) {
 			return;
 		}
 		
-		$reference_id = isset( $_GET['ref'] ) ? $_GET['ref'] : '';
+		$reference_id = isset( $_GET['ref'] ) ? sanitize_text_field( $_GET['ref'] ) : '';
 		
 		// URL decode first in case it's encoded
 		$reference_id = urldecode( $reference_id );

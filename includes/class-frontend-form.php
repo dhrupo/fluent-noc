@@ -48,9 +48,9 @@ class ONOC_Frontend_Form {
 	 */
 	public static function render_form() {
 		// Check rate limiting
-		if ( ! self::check_rate_limit() ) {
-			return '<div class="onoc-error">Too many requests. Please try again later.</div>';
-		}
+		// if ( ! self::check_rate_limit() ) {
+		// 	return '<div class="onoc-error">Too many requests. Please try again later.</div>';
+		// }
 		
 		ob_start();
 		?>
@@ -141,9 +141,9 @@ class ONOC_Frontend_Form {
 		}
 		
 		// Check rate limiting
-		if ( ! self::check_rate_limit() ) {
-			wp_send_json_error( array( 'message' => 'Too many requests. Please try again later.' ) );
-		}
+		// if ( ! self::check_rate_limit() ) {
+		// 	wp_send_json_error( array( 'message' => 'Too many requests. Please try again later.' ) );
+		// }
 		
 		// Validate and sanitize input
 		$data = array(
@@ -281,10 +281,11 @@ class ONOC_Frontend_Form {
 		);
 		
 		foreach ( $ip_keys as $key ) {
-			if ( ! empty( $_SERVER[ $key ] ) ) {
-				$ip = $_SERVER[ $key ];
+			if ( ! empty( $_SERVER[ $key ] ) && is_string( $_SERVER[ $key ] ) ) {
+				$ip = sanitize_text_field( $_SERVER[ $key ] );
 				if ( strpos( $ip, ',' ) !== false ) {
-					$ip = explode( ',', $ip )[0];
+					$ip_parts = explode( ',', $ip );
+					$ip = isset( $ip_parts[0] ) ? $ip_parts[0] : $ip;
 				}
 				return trim( $ip );
 			}

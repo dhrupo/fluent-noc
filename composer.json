@@ -8,6 +8,9 @@
 		"dompdf/dompdf": "^2.0",
 		"endroid/qr-code": "^4.0"
 	},
+	"require-dev": {
+		"php": ">=7.4"
+	},
 	"autoload": {
 		"psr-4": {
 			"ONOC\\": "includes/"
@@ -17,6 +20,10 @@
 		"optimize-autoloader": true,
 		"platform": {
 			"php": "7.4"
+		},
+		"platform-check": false,
+		"allow-plugins": {
+			"*": true
 		}
 	}
 }

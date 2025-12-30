@@ -69,10 +69,13 @@ class ONOC_DB {
 		);
 		
 		foreach ( $columns_to_add as $column => $definition ) {
-			$column_exists = $wpdb->get_results( "SHOW COLUMNS FROM {$this->table_name} LIKE '{$column}'" );
+			$column_exists = $wpdb->get_results( $wpdb->prepare( "SHOW COLUMNS FROM {$this->table_name} LIKE %s", $column ) );
 			if ( empty( $column_exists ) ) {
-				$after = ( $column === 'employee_id' ) ? 'AFTER full_name' : ( $column === 'joining_date' ) ? 'AFTER email' : ( $column === 'position' ) ? 'AFTER joining_date' : 'AFTER position';
-				$wpdb->query( "ALTER TABLE {$this->table_name} ADD COLUMN {$column} {$definition} {$after}" );
+				$after = ( $column === 'employee_id' ) ? 'AFTER full_name' : ( ( $column === 'joining_date' ) ? 'AFTER email' : ( ( $column === 'position' ) ? 'AFTER joining_date' : 'AFTER position' ) );
+				// Use $wpdb->prepare for safety, but ALTER TABLE doesn't support placeholders for column names
+				// So we sanitize the column name and definition
+				$column_safe = sanitize_key( $column );
+				$wpdb->query( "ALTER TABLE {$this->table_name} ADD COLUMN `{$column_safe}` {$definition} {$after}" );
 			}
 		}
 		

@@ -18,22 +18,44 @@ A WordPress plugin for managing No Objection Certificate (NOC) requests with fro
 ## Installation
 
 1. Upload the plugin files to `/wp-content/plugins/fluent-noc/`
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Install dependencies:
+2. Navigate to the plugin directory:
+   ```bash
+   cd /wp-content/plugins/fluent-noc/
+   ```
+3. Install Composer dependencies:
    ```bash
    composer install
    ```
-4. Build block assets:
+
+4. Install npm dependencies:
    ```bash
    npm install
-   npm run build or npm run start
    ```
+
+5. **If the above commands fail**, try using the setup script:
+   ```bash
+   ./setup.sh
+   ```
+   
+   **Troubleshooting:**
+   
+   - **Composer SSL certificate errors**: Run `composer config -g secure-http false` then try again
+   - **npm permission errors**: Run `sudo chown -R $(whoami) ~/.npm && npm cache clean --force` then try again
+
+6. Build block assets (optional, for development):
+   ```bash
+   npm run build
+   # or for development with watch mode:
+   npm run start
+   ```
+
+7. Activate the plugin through the 'Plugins' menu in WordPress
 
 ## Requirements
 
-- WordPress 5.0 or higher
-- PHP 7.4 or higher
-- Composer (for dependencies)
+- WordPress 6.4 or higher
+- PHP 7.4 to 8.2
+- Composer (for dependencies: dompdf, endroid/qr-code)
 - Node.js and npm (optional, for block development)
 
 ## Usage

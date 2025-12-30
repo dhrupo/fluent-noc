@@ -97,7 +97,7 @@ class ONOC_PDF_Generator {
 	 * Convert image URL to absolute URL or base64 for PDF
 	 */
 	private static function get_image_for_pdf( $url ) {
-		if ( empty( $url ) ) {
+		if ( empty( $url ) || ! is_string( $url ) ) {
 			return '';
 		}
 		

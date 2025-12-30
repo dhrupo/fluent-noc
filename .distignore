@@ -1,7 +1,6 @@
 # Development dependencies
 /node_modules/
 /package-lock.json
-/vendor/
 /composer.lock
 
 # Build files
@@ -26,11 +25,6 @@ Thumbs.db
 .git/
 .gitignore
 .gitattributes
-
-# Documentation (optional - remove if you want to include README in distribution)
-README.md
-CHANGELOG.md
-LICENSE.txt
 
 # Development files
 .env

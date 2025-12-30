@@ -196,7 +196,7 @@ class ONOC_Block_Renderer {
 	 * Convert image URL to absolute URL or base64 for PDF
 	 */
 	private function get_image_for_pdf( $url ) {
-		if ( empty( $url ) ) {
+		if ( empty( $url ) || ! is_string( $url ) ) {
 			return '';
 		}
 		
@@ -297,7 +297,7 @@ class ONOC_Block_Renderer {
 			$url = isset( $this->placeholders[ $url ] ) ? $this->placeholders[ $url ] : '';
 		}
 		
-		if ( strpos( $url, '{{' ) !== false ) {
+		if ( ! empty( $url ) && is_string( $url ) && strpos( $url, '{{' ) !== false ) {
 			$url = $this->replace_placeholders( $url );
 		}
 		

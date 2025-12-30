@@ -5,13 +5,14 @@
  * Description: Manage No Objection Certificate (NOC) requests with frontend application form, admin review panel, PDF generation, and email notifications.
  * Version: 1.0.0
  * Author: Dhrupo
- * Author URI: https://niluthpalpurkayastha.netlify.app
+ * Author URI: https://profiles.wordpress.org/dhrupo
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: office-noc-manager
  * Domain Path: /languages
- * Requires at least: 5.0
+ * Requires at least: 6.4
  * Requires PHP: 7.4
+ * Tested up to: 6.5
  */
 
 // Exit if accessed directly
