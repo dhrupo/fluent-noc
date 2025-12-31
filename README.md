@@ -205,6 +205,17 @@ If you prefer a different SMTP plugin, any of these will work:
 
 **Note:** After configuring your SMTP plugin, test the email functionality by submitting a test NOC request to ensure all emails (submission, approval, rejection) are being sent correctly.
 
+#### Testing Email Delivery
+
+For testing purposes, you can use a temporary email service like [Temp-Mail](https://temp-mail.org/en/) to receive test emails without using your real email address:
+
+1. Visit [https://temp-mail.org/en/](https://temp-mail.org/en/)
+2. Copy the temporary email address provided
+3. Use this email address when submitting a test NOC request
+4. Check the temporary inbox to verify that all emails (submission confirmation, approval, rejection) are being delivered correctly
+
+This is especially useful for testing email functionality during development without cluttering your personal inbox.
+
 ## Dependencies
 
 - **Dompdf**: PDF generation library
