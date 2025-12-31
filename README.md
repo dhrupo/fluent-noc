@@ -252,6 +252,100 @@ fluent-noc/
 └── vendor/                          # Composer dependencies
 ```
 
+## Submission Requirements
+
+### Project Name & Short Description
+
+**Fluent NOC Manager** - A comprehensive WordPress plugin for managing No Objection Certificate (NOC) requests with automated workflow, PDF generation, email notifications, and public verification system.
+
+### Problem Statement – What problem does it solve?
+
+Currently, offices manually generate NOC certificates, which is time-consuming and error-prone. The manual process involves:
+- Collecting employee information through various channels (email, forms, in-person)
+- Manually creating certificates in word processors
+- Printing and signing physical documents
+- Managing approval/rejection workflows manually
+- Tracking requests through spreadsheets or paper files
+- No centralized system for verification
+
+This leads to delays, inconsistencies, and difficulty in tracking and verifying NOC certificates.
+
+### Solution Overview – How does your project address the problem?
+
+Fluent NOC Manager automates the entire NOC request lifecycle:
+
+1. **Frontend Application Form**: Employees submit requests online with all required information
+2. **Automated Validation**: Server-side and client-side validation ensures data accuracy
+3. **Admin Review Panel**: HR managers can review, approve, or reject requests with notes
+4. **Automated PDF Generation**: Professional NOC certificates are generated automatically using customizable templates
+5. **Email Notifications**: Automated emails for submission confirmation, approval (with PDF), and rejection (with reason)
+6. **Public Verification**: QR code-based verification system allows instant verification of NOC authenticity
+7. **Centralized Management**: All requests are stored in a database with filtering and search capabilities
+
+### Target Users – Who will benefit from it?
+
+- **HR Departments**: Streamline NOC request processing and management
+- **Employees**: Easy online submission and quick access to certificates
+- **Immigration/Embassy Officials**: Instant verification of NOC authenticity via QR codes
+- **Organizations**: Reduce administrative overhead and improve efficiency
+
+### Demo
+
+Demo files and screenshots are available in the `/demo` folder.
+
+### Github link
+
+[GitHub Repository](https://github.com/dhrupo/fluent-noc)
+
+### Tech / Tools Used
+
+**Backend:**
+- PHP 7.4-8.2
+- WordPress 6.4+
+- Dompdf (PDF generation)
+- Endroid QR Code (QR code generation)
+
+**Frontend:**
+- JavaScript (jQuery)
+- HTML5/CSS3
+- Gutenberg Blocks (WordPress)
+
+**Development Tools:**
+- Composer (Dependency management)
+- npm/Node.js (Build tools)
+- WordPress Scripts (@wordpress/scripts)
+
+**Libraries:**
+- Dompdf 2.0+ (PDF rendering)
+- Endroid QR Code 4.0+ (QR code generation)
+
+### Future Potential – How this could be expanded or used by office which right now manually generate noc
+
+**Immediate Benefits:**
+- Eliminates manual certificate creation
+- Reduces processing time from days to minutes
+- Ensures consistent formatting and branding
+- Provides audit trail of all requests
+
+**Future Expansion Possibilities:**
+
+1. **Multi-language Support**: Generate NOC certificates in multiple languages
+2. **Digital Signatures**: Integration with digital signature services for paperless workflow
+3. **Advanced Reporting**: Analytics dashboard with request statistics, approval rates, and trends
+4. **Integration with HR Systems**: Connect with existing HR management systems
+5. **Workflow Customization**: Multi-level approval workflows (Manager → HR → Director)
+6. **Template Library**: Pre-built templates for different types of NOCs
+7. **Automated Reminders**: Email reminders for pending approvals
+8. **Export Capabilities**: Export data to Excel, CSV, or other formats
+9. **Role-based Access**: Different permission levels for different user roles
+10. **Integration with Travel Management**: Connect with travel booking systems
+
+**Scalability:**
+- Can handle hundreds of requests per day
+- Suitable for small offices to large enterprises
+- Cloud-ready architecture
+- Can be deployed on any WordPress hosting
+
 ## Support
 
 For issues and feature requests, please contact the plugin developer.
