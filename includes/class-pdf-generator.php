@@ -173,7 +173,7 @@ class ONOC_PDF_Generator {
 		if ( ! empty( $header_image ) ) {
 			$header_url = self::get_image_for_pdf( $header_image );
 			if ( ! empty( $header_url ) ) {
-				$header_html = '<div class="onoc-pdf-header"><img src="' . esc_attr( $header_url ) . '" style="width: 100%; max-height: 100px; object-fit: contain;" /></div>';
+				$header_html = '<div id="onoc-pdf-header"><img src="' . esc_attr( $header_url ) . '" alt="Header" /></div>';
 			}
 		}
 		
@@ -181,7 +181,7 @@ class ONOC_PDF_Generator {
 		if ( ! empty( $footer_image ) ) {
 			$footer_url = self::get_image_for_pdf( $footer_image );
 			if ( ! empty( $footer_url ) ) {
-				$footer_html = '<div class="onoc-pdf-footer"><img src="' . esc_attr( $footer_url ) . '" style="width: 100%; max-height: 100px; object-fit: contain; display: block; margin: 0 auto;" alt="Footer" /></div>';
+				$footer_html = '<div id="onoc-pdf-footer"><img src="' . esc_attr( $footer_url ) . '" alt="Footer" /></div>';
 			}
 		}
 		
@@ -191,8 +191,8 @@ class ONOC_PDF_Generator {
 	<meta charset="UTF-8">
 	<style>
 		@page {
-			margin-top: 0;
-			margin-bottom: 0;
+			margin-top: 100px;
+			margin-bottom: 100px;
 			margin-left: 2cm;
 			margin-right: 2cm;
 			size: A4 portrait;
@@ -205,31 +205,44 @@ class ONOC_PDF_Generator {
 			margin: 0;
 			padding: 0;
 		}
-		.onoc-pdf-header {
-			margin-bottom: 15px;
+		/* Header - fixed position, centered, appears on every page */
+		/* Using negative positioning to shift into page margins as per dompdf docs */
+		#onoc-pdf-header {
+			position: fixed;
+			left: -2cm;
+			top: -100px;
+			right: -2cm;
+			height: 100px;
 			text-align: center;
-			page-break-after: avoid;
 		}
-		.onoc-pdf-header img {
+		#onoc-pdf-header img {
+			max-width: 100%;
 			max-height: 100px;
+			height: auto;
+			width: auto;
+			margin: 0 auto;
+			display: block;
+		}
+		/* Footer - fixed position, centered, appears on every page */
+		/* Using negative positioning to shift into page margins as per dompdf docs */
+		#onoc-pdf-footer {
+			position: fixed;
+			left: -2cm;
+			bottom: -100px;
+			right: -2cm;
+			height: 100px;
+			text-align: center;
+		}
+		#onoc-pdf-footer img {
+			max-width: 100%;
+			max-height: 100px;
+			height: auto;
+			width: auto;
+			margin: 0 auto;
+			display: block;
 		}
 		.onoc-pdf-content {
 			margin: 10px 0;
-		}
-		.onoc-pdf-footer {
-			margin-top: 50px;
-			text-align: center;
-			page-break-before: avoid;
-			width: 100%;
-			clear: both;
-			position: relative;
-		}
-		.onoc-pdf-footer img {
-			display: block;
-			margin: 0 auto;
-			max-width: 100%;
-			max-height: 80px;
-			height: auto;
 		}
 		h1, h2, h3, h4, h5, h6 {
 			margin-top: 0;

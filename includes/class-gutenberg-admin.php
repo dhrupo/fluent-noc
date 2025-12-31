@@ -470,13 +470,24 @@ class ONOC_Gutenberg_Admin {
 			// Handle signature upload
 			if ( ! empty( $_FILES['signature_image_file']['name'] ) ) {
 				$uploadedfile = $_FILES['signature_image_file'];
-				$upload_overrides = array( 'test_form' => false );
-				$movefile = wp_handle_upload( $uploadedfile, $upload_overrides );
-				if ( $movefile && ! isset( $movefile['error'] ) ) {
-					update_option( 'onoc_signature_image', $movefile['url'] );
-					// Also store file path for easier access
-					if ( isset( $movefile['file'] ) ) {
-						update_option( 'onoc_signature_image_path', $movefile['file'] );
+				
+				// Validate file type - only JPG/JPEG allowed
+				$file_type = wp_check_filetype( $uploadedfile['name'] );
+				$allowed_types = array( 'jpg', 'jpeg' );
+				
+				if ( ! in_array( strtolower( $file_type['ext'] ), $allowed_types, true ) ) {
+					echo '<div class="notice notice-error"><p>' . esc_html__( 'HR Signature Image must be a JPG/JPEG file. PNG and other formats are not supported.', 'office-noc-manager' ) . '</p></div>';
+				} else {
+					$upload_overrides = array( 'test_form' => false );
+					$movefile = wp_handle_upload( $uploadedfile, $upload_overrides );
+					if ( $movefile && ! isset( $movefile['error'] ) ) {
+						update_option( 'onoc_signature_image', $movefile['url'] );
+						// Also store file path for easier access
+						if ( isset( $movefile['file'] ) ) {
+							update_option( 'onoc_signature_image_path', $movefile['file'] );
+						}
+					} elseif ( isset( $movefile['error'] ) ) {
+						echo '<div class="notice notice-error"><p>' . esc_html( $movefile['error'] ) . '</p></div>';
 					}
 				}
 			}
@@ -484,13 +495,24 @@ class ONOC_Gutenberg_Admin {
 			// Handle PDF header upload
 			if ( ! empty( $_FILES['pdf_header_file']['name'] ) ) {
 				$uploadedfile = $_FILES['pdf_header_file'];
-				$upload_overrides = array( 'test_form' => false );
-				$movefile = wp_handle_upload( $uploadedfile, $upload_overrides );
-				if ( $movefile && ! isset( $movefile['error'] ) ) {
-					update_option( 'onoc_pdf_header', $movefile['url'] );
-					// Also store file path for easier access
-					if ( isset( $movefile['file'] ) ) {
-						update_option( 'onoc_pdf_header_path', $movefile['file'] );
+				
+				// Validate file type - only JPG/JPEG allowed
+				$file_type = wp_check_filetype( $uploadedfile['name'] );
+				$allowed_types = array( 'jpg', 'jpeg' );
+				
+				if ( ! in_array( strtolower( $file_type['ext'] ), $allowed_types, true ) ) {
+					echo '<div class="notice notice-error"><p>' . esc_html__( 'PDF Header Image must be a JPG/JPEG file. PNG and other formats are not supported.', 'office-noc-manager' ) . '</p></div>';
+				} else {
+					$upload_overrides = array( 'test_form' => false );
+					$movefile = wp_handle_upload( $uploadedfile, $upload_overrides );
+					if ( $movefile && ! isset( $movefile['error'] ) ) {
+						update_option( 'onoc_pdf_header', $movefile['url'] );
+						// Also store file path for easier access
+						if ( isset( $movefile['file'] ) ) {
+							update_option( 'onoc_pdf_header_path', $movefile['file'] );
+						}
+					} elseif ( isset( $movefile['error'] ) ) {
+						echo '<div class="notice notice-error"><p>' . esc_html( $movefile['error'] ) . '</p></div>';
 					}
 				}
 			}
@@ -498,13 +520,24 @@ class ONOC_Gutenberg_Admin {
 			// Handle PDF footer upload
 			if ( ! empty( $_FILES['pdf_footer_file']['name'] ) ) {
 				$uploadedfile = $_FILES['pdf_footer_file'];
-				$upload_overrides = array( 'test_form' => false );
-				$movefile = wp_handle_upload( $uploadedfile, $upload_overrides );
-				if ( $movefile && ! isset( $movefile['error'] ) ) {
-					update_option( 'onoc_pdf_footer', $movefile['url'] );
-					// Also store file path for easier access
-					if ( isset( $movefile['file'] ) ) {
-						update_option( 'onoc_pdf_footer_path', $movefile['file'] );
+				
+				// Validate file type - only JPG/JPEG allowed
+				$file_type = wp_check_filetype( $uploadedfile['name'] );
+				$allowed_types = array( 'jpg', 'jpeg' );
+				
+				if ( ! in_array( strtolower( $file_type['ext'] ), $allowed_types, true ) ) {
+					echo '<div class="notice notice-error"><p>' . esc_html__( 'PDF Footer Image must be a JPG/JPEG file. PNG and other formats are not supported.', 'office-noc-manager' ) . '</p></div>';
+				} else {
+					$upload_overrides = array( 'test_form' => false );
+					$movefile = wp_handle_upload( $uploadedfile, $upload_overrides );
+					if ( $movefile && ! isset( $movefile['error'] ) ) {
+						update_option( 'onoc_pdf_footer', $movefile['url'] );
+						// Also store file path for easier access
+						if ( isset( $movefile['file'] ) ) {
+							update_option( 'onoc_pdf_footer_path', $movefile['file'] );
+						}
+					} elseif ( isset( $movefile['error'] ) ) {
+						echo '<div class="notice notice-error"><p>' . esc_html( $movefile['error'] ) . '</p></div>';
 					}
 				}
 			}
@@ -577,14 +610,14 @@ class ONOC_Gutenberg_Admin {
 					<tr>
 						<th><label for="signature_image_file"><?php esc_html_e( 'HR Signature Image', 'office-noc-manager' ); ?></label></th>
 						<td>
-							<input type="file" id="signature_image_file" name="signature_image_file" accept="image/*" />
+							<input type="file" id="signature_image_file" name="signature_image_file" accept="image/jpeg,image/jpg,.jpg,.jpeg" />
 							<p id="onoc-signature-image-container" style="margin-top: 10px;">
 								<?php if ( get_option( 'onoc_signature_image' ) ) : ?>
 									<img src="<?php echo esc_url( get_option( 'onoc_signature_image' ) ); ?>" style="max-width: 200px; max-height: 100px; display: block; margin-bottom: 10px;" />
 									<button type="button" class="button button-secondary onoc-remove-image-btn" data-image-type="signature"><?php esc_html_e( 'Remove Image', 'office-noc-manager' ); ?></button>
 								<?php endif; ?>
 							</p>
-							<p class="description"><?php esc_html_e( 'Upload signature image file', 'office-noc-manager' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Upload signature image file (JPG/JPEG only - PNG not supported)', 'office-noc-manager' ); ?></p>
 							<p class="description"><?php esc_html_e( 'Or enter URL:', 'office-noc-manager' ); ?></p>
 							<input type="url" id="signature_image" name="signature_image" value="<?php echo esc_url( get_option( 'onoc_signature_image', '' ) ); ?>" class="regular-text" placeholder="<?php esc_attr_e( 'Or paste image URL here', 'office-noc-manager' ); ?>" />
 						</td>
@@ -592,14 +625,14 @@ class ONOC_Gutenberg_Admin {
 					<tr>
 						<th><label for="pdf_header_file"><?php esc_html_e( 'PDF Header Image', 'office-noc-manager' ); ?></label></th>
 						<td>
-							<input type="file" id="pdf_header_file" name="pdf_header_file" accept="image/*" />
+							<input type="file" id="pdf_header_file" name="pdf_header_file" accept="image/jpeg,image/jpg,.jpg,.jpeg" />
 							<p id="onoc-header-image-container" style="margin-top: 10px;">
 								<?php if ( get_option( 'onoc_pdf_header' ) ) : ?>
 									<img src="<?php echo esc_url( get_option( 'onoc_pdf_header' ) ); ?>" style="max-width: 100%; max-height: 150px; display: block; margin-bottom: 10px;" />
 									<button type="button" class="button button-secondary onoc-remove-image-btn" data-image-type="header"><?php esc_html_e( 'Remove Image', 'office-noc-manager' ); ?></button>
 								<?php endif; ?>
 							</p>
-							<p class="description"><?php esc_html_e( 'Upload office letterhead/header image for PDF', 'office-noc-manager' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Upload office letterhead/header image for PDF (JPG/JPEG only - PNG not supported)', 'office-noc-manager' ); ?></p>
 							<p class="description"><?php esc_html_e( 'Or enter URL:', 'office-noc-manager' ); ?></p>
 							<input type="url" id="pdf_header" name="pdf_header" value="<?php echo esc_url( get_option( 'onoc_pdf_header', '' ) ); ?>" class="regular-text" placeholder="<?php esc_attr_e( 'Or paste image URL here', 'office-noc-manager' ); ?>" />
 						</td>
@@ -607,14 +640,14 @@ class ONOC_Gutenberg_Admin {
 					<tr>
 						<th><label for="pdf_footer_file"><?php esc_html_e( 'PDF Footer Image', 'office-noc-manager' ); ?></label></th>
 						<td>
-							<input type="file" id="pdf_footer_file" name="pdf_footer_file" accept="image/*" />
+							<input type="file" id="pdf_footer_file" name="pdf_footer_file" accept="image/jpeg,image/jpg,.jpg,.jpeg" />
 							<p id="onoc-footer-image-container" style="margin-top: 10px;">
 								<?php if ( get_option( 'onoc_pdf_footer' ) ) : ?>
 									<img src="<?php echo esc_url( get_option( 'onoc_pdf_footer' ) ); ?>" style="max-width: 100%; max-height: 100px; display: block; margin-bottom: 10px;" />
 									<button type="button" class="button button-secondary onoc-remove-image-btn" data-image-type="footer"><?php esc_html_e( 'Remove Image', 'office-noc-manager' ); ?></button>
 								<?php endif; ?>
 							</p>
-							<p class="description"><?php esc_html_e( 'Upload office footer image for PDF', 'office-noc-manager' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Upload office footer image for PDF (JPG/JPEG only - PNG not supported)', 'office-noc-manager' ); ?></p>
 							<p class="description"><?php esc_html_e( 'Or enter URL:', 'office-noc-manager' ); ?></p>
 							<input type="url" id="pdf_footer" name="pdf_footer" value="<?php echo esc_url( get_option( 'onoc_pdf_footer', '' ) ); ?>" class="regular-text" placeholder="<?php esc_attr_e( 'Or paste image URL here', 'office-noc-manager' ); ?>" />
 						</td>

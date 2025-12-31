@@ -257,18 +257,60 @@
 			}
 		});
 		
-		// Handle signature image preview
+		// Handle signature image preview with validation
 		$(document).on('change', '#signature_image_file', function() {
+			var file = this.files[0];
+			if (file) {
+				var fileName = file.name.toLowerCase();
+				var validExtensions = ['.jpg', '.jpeg'];
+				var isValid = validExtensions.some(function(ext) {
+					return fileName.endsWith(ext);
+				});
+				
+				if (!isValid) {
+					alert('HR Signature Image must be a JPG/JPEG file. PNG and other formats are not supported.');
+					$(this).val('');
+					return;
+				}
+			}
 			showImagePreview(this, 'onoc-signature-image-container', '200px', '100px');
 		});
 		
-		// Handle header image preview
+		// Handle header image preview with validation
 		$(document).on('change', '#pdf_header_file', function() {
+			var file = this.files[0];
+			if (file) {
+				var fileName = file.name.toLowerCase();
+				var validExtensions = ['.jpg', '.jpeg'];
+				var isValid = validExtensions.some(function(ext) {
+					return fileName.endsWith(ext);
+				});
+				
+				if (!isValid) {
+					alert('PDF Header Image must be a JPG/JPEG file. PNG and other formats are not supported.');
+					$(this).val('');
+					return;
+				}
+			}
 			showImagePreview(this, 'onoc-header-image-container', '100%', '150px');
 		});
 		
-		// Handle footer image preview
+		// Handle footer image preview with validation
 		$(document).on('change', '#pdf_footer_file', function() {
+			var file = this.files[0];
+			if (file) {
+				var fileName = file.name.toLowerCase();
+				var validExtensions = ['.jpg', '.jpeg'];
+				var isValid = validExtensions.some(function(ext) {
+					return fileName.endsWith(ext);
+				});
+				
+				if (!isValid) {
+					alert('PDF Footer Image must be a JPG/JPEG file. PNG and other formats are not supported.');
+					$(this).val('');
+					return;
+				}
+			}
 			showImagePreview(this, 'onoc-footer-image-container', '100%', '100px');
 		});
 	});
