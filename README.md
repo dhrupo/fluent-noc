@@ -1,4 +1,4 @@
-# Office NOC Manager
+# Fluent NOC - Office NOC Manager
 
 A WordPress plugin for managing No Objection Certificate (NOC) requests with frontend application form, admin review panel, PDF generation, and email notifications.
 
